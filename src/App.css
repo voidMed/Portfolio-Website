@@ -668,6 +668,29 @@
   color: #555;
 }
 
+.form-status {
+  margin-block-start: var(--space-sm);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-500);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+
+.form-status.sending {
+  color: var(--clr-text-muted);
+}
+
+.form-status.sent {
+  color: var(--clr-accent);
+  background: var(--clr-accent-dim);
+}
+
+.form-status.error {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+}
+
 .contact-form textarea {
   resize: vertical;
   min-block-size: 120px;

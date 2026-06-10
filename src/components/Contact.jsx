@@ -1,8 +1,25 @@
+import { useState } from 'react';
+
 export default function Contact() {
+  const [status, setStatus] = useState('');
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert('Thank you for your message! I will get back to you soon.');
-    e.target.reset();
+    const form = e.target;
+    const data = new FormData(form);
+    data.append('access_key', import.meta.env.VITE_WEB3FORMS_KEY);
+    setStatus('sending');
+    window.fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: data,
+    }).then((r) => {
+      if (r.ok) {
+        setStatus('sent');
+        form.reset();
+      } else {
+        setStatus('error');
+      }
+    });
   };
 
   return (
@@ -15,18 +32,20 @@ export default function Contact() {
       <div className="contact-content">
         <form className="contact-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <input type="text" placeholder="Your Name" required />
+            <input type="text" name="name" placeholder="Your Name" required />
           </div>
           <div className="form-group">
-            <input type="email" placeholder="Your Email" required />
+            <input type="email" name="email" placeholder="Your Email" required />
           </div>
           <div className="form-group">
-            <input type="text" placeholder="Subject" />
+            <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
           </div>
-          <div className="form-group">
-            <textarea rows="5" placeholder="Your Message" required></textarea>
-          </div>
-          <button type="submit" className="btn btn-primary">Send Message</button>
+          <button type="submit" className="btn btn-primary" disabled={status === 'sending'}>
+            {status === 'sending' ? 'Sending...' : 'Send Message'}
+          </button>
+          {status === 'sending' && <p className="form-status sending">Sending your message...</p>}
+          {status === 'sent' && <p className="form-status sent">Thank you! I'll get back to you soon.</p>}
+          {status === 'error' && <p className="form-status error">Failed to send. Please try again later.</p>}
         </form>
         <div className="contact-info">
           <div className="contact-item">
