@@ -10,10 +10,54 @@ const sections = [
   { id: 'contact', label: 'Contact' },
 ];
 
+const taglines = [
+  "If you're reading this, welcome to the chaos.",
+  "Tiny icon, big personality.",
+  "This little guy approves your visit.",
+  "Turning coffee into code ☕",
+  "Building stuff… occasionally breaking it.",
+  "I debug faster than I panic.",
+  "Yes, this portfolio is responsive. Unlike me sometimes.",
+  "Code. Sleep. Repeat. (Mostly code.)",
+  "Still loading my life choices…",
+  "Bug-free? Bold assumption.",
+  "Professional button clicker.",
+  "Ctrl+Z doesn't work in life.",
+  "Powered by coffee & confusion.",
+  "I promise the bugs are features.",
+  "404: Social life not found.",
+  "Currently pretending I know what I'm doing.",
+  "Made with code, chaos, and caffeine.",
+  "Hi there, snooper.",
+  "This means nothing. Enjoy.",
+  "Okay fine, you win.",
+  "Just vibing here.",
+  "404: purpose not found.",
+  "You clicked it. Respect.",
+  "Nice find!",
+  "Still here? Wow.",
+  "This is my favorite pixel.",
+];
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState('hero');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [tagline, setTagline] = useState(
+    () => taglines[Math.floor(Math.random() * taglines.length)]
+  );
+
+  const handleBrandClick = (id) => {
+    setMenuOpen(false);
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    if (Math.random() < 0.6) {
+      let next;
+      do {
+        next = taglines[Math.floor(Math.random() * taglines.length)];
+      } while (next === tagline);
+      setTagline(next);
+    }
+  };
 
   useEffect(() => {
     const onScroll = () => {
@@ -40,8 +84,9 @@ export default function Navbar() {
 
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-      <div className="nav-brand" onClick={() => handleClick('hero')}>
-        MA
+      <div className="nav-brand" onClick={() => handleBrandClick('hero')}>
+        <img src="/image.png" alt="MA" className="nav-logo" />
+          <span className="nav-tagline">{tagline}</span>
       </div>
       <div className={`nav-toggle ${menuOpen ? 'open' : ''}`} onClick={() => setMenuOpen(!menuOpen)}>
         <span></span><span></span><span></span>

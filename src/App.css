@@ -25,6 +25,8 @@
 }
 
 .nav-brand {
+  display: flex;
+  align-items: center;
   font-size: var(--fs-lg);
   font-weight: var(--fw-800);
   color: var(--clr-text);
@@ -35,6 +37,21 @@
 
 .nav-brand:hover {
   opacity: 0.7;
+}
+
+.nav-logo {
+  block-size: 48px;
+  inline-size: auto;
+  border-radius: var(--radius-sm);
+}
+
+.nav-tagline {
+  font-size: var(--fs-xs);
+  color: var(--clr-text-muted);
+  font-weight: var(--fw-500);
+  margin-inline-start: var(--space-sm);
+  opacity: 0.7;
+  white-space: nowrap;
 }
 
 .nav-links {
