@@ -1,25 +1,43 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 export default function Contact() {
   const [status, setStatus] = useState('');
+  const btnRef = useRef(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
-    const data = new FormData(form);
-    data.append('access_key', import.meta.env.VITE_WEB3FORMS_KEY);
+    const formData = new FormData(form);
+    formData.append('access_key', import.meta.env.VITE_WEB3FORMS_KEY);
+
     setStatus('sending');
-    window.fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      body: data,
-    }).then((r) => {
-      if (r.ok) {
+    if (btnRef.current) {
+      btnRef.current.textContent = 'Sending...';
+      btnRef.current.disabled = true;
+    }
+
+    try {
+      const response = await window.fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+      if (response.ok) {
         setStatus('sent');
         form.reset();
       } else {
+        alert('Error: ' + data.message);
         setStatus('error');
       }
-    });
+    } catch (error) {
+      alert('Something went wrong. Please try again.');
+      setStatus('error');
+    } finally {
+      if (btnRef.current) {
+        btnRef.current.textContent = 'Send Message';
+        btnRef.current.disabled = false;
+      }
+    }
   };
 
   return (
@@ -40,9 +58,7 @@ export default function Contact() {
           <div className="form-group">
             <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
           </div>
-          <button type="submit" className="btn btn-primary" disabled={status === 'sending'}>
-            {status === 'sending' ? 'Sending...' : 'Send Message'}
-          </button>
+          <button type="submit" className="btn btn-primary" ref={btnRef}>Send Message</button>
           {status === 'sending' && <p className="form-status sending">Sending your message...</p>}
           {status === 'sent' && <p className="form-status sent">Thank you! I'll get back to you soon.</p>}
           {status === 'error' && <p className="form-status error">Failed to send. Please try again later.</p>}
