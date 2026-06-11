@@ -29,7 +29,7 @@ export default function Contact() {
         alert('Error: ' + data.message);
         setStatus('error');
       }
-    } catch (error) {
+    } catch {
       alert('Something went wrong. Please try again.');
       setStatus('error');
     } finally {
